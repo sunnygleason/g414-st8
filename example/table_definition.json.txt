@@ -1,0 +1,13 @@
+{
+"columns":[
+  {"name":"a","type":"INT","length":4},
+  {"name":"b","type":"INT","length":8}
+],
+"indexes":[
+  {
+   "name":"P",
+   "clustered":true,"unique":true,
+   "indexColumns":[{"name":"a"}]
+  }
+]
+}

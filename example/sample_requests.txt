@@ -1,0 +1,8 @@
+
+curl "http://localhost:8080/t/id"
+curl "http://localhost:8080/t/name"
+
+curl "http://localhost:8080/d/atable;a=0"
+curl -X PUT "http://localhost:8080/d/atable;a=0;b=0"
+curl -X POST "http://localhost:8080/d/atable;a=0;b=1"
+
