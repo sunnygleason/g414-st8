@@ -25,17 +25,7 @@ public class DatabaseModule extends AbstractModule {
         bind(Key.get(String.class, DatabaseName.class))
                 .toInstance(databaseName);
         bind(InternalTableDefinitions.class).in(Scopes.SINGLETON);
-
         bind(TableManager.class);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.err.println("Shutting down InnoDB...");
-                database.shutdown(false);
-                System.err.println("InnoDB shut down cleanly.");
-            }
-        }));
     }
 
     @BindingAnnotation
