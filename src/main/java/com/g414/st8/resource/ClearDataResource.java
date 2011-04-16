@@ -43,7 +43,10 @@ public class ClearDataResource {
             }
         }
 
-        database.truncateTable(definitions.getTables());
+        if (!preserve) {
+            database.truncateTable(definitions.getTables());
+        }
+
         database.truncateTable(definitions.getCounters());
         database.truncateTable(definitions.getGraph());
 

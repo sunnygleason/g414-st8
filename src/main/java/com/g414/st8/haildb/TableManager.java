@@ -2,6 +2,7 @@ package com.g414.st8.haildb;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletResponse;
@@ -54,6 +55,8 @@ public class TableManager {
 
     @Inject
     private ObjectMapper mapper;
+
+    private Map<String, TableDef> defCache = new ConcurrentHashMap<String, TableDef>();
 
     public Map<String, TableDefinition> listAllTables() throws Exception {
         return getAllTables(new Target(definitions.getTables()));
@@ -122,6 +125,7 @@ public class TableManager {
         dbt.inTransaction(TransactionLevel.REPEATABLE_READ,
                 new TransactionCallback<Void>() {
                     public Void inTransaction(Transaction txn) {
+
                         database.createTable(def);
 
                         Traversal<Long> iter = Functional.map(txn, spec,
@@ -185,12 +189,18 @@ public class TableManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        this.defCache.remove(name);
     }
 
     public TableDef getTableDef(String name) throws Exception {
-        TableDefinition inDef = this.getTable(name, true);
+        if (!defCache.containsKey(name)) {
+            TableDefinition inDef = this.getTable(name, true);
 
-        return createFromTableDefinition(name, inDef);
+            defCache.put(name, createFromTableDefinition(name, inDef));
+        }
+
+        return defCache.get(name);
     }
 
     private void deleteTableRow(final String name) throws Exception {
