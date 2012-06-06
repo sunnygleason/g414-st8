@@ -8,36 +8,36 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.g414.st8.resource.ClearDataResource;
+import com.g414.st8.resource.CounterServiceResource;
+import com.g414.st8.resource.GraphServiceResource;
+import com.g414.st8.resource.IndexResource;
 import com.g414.st8.resource.TableAdministrationResource;
 import com.g414.st8.resource.TableDataFormResource;
 import com.g414.st8.resource.TableDataUriResource;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.internal.ImmutableMap;
-import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.container.filter.GZIPContentEncodingFilter;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
-public class ServerModule extends GuiceServletContextListener {
-    @Override
-    protected Injector getInjector() {
-        return Guice.createInjector(new DatabaseModule(), new ServletModule() {
-            @Override
-            protected void configureServlets() {
-                bind(TableAdministrationResource.class).in(Scopes.SINGLETON);
-                bind(TableDataUriResource.class).in(Scopes.SINGLETON);
-                bind(TableDataFormResource.class).in(Scopes.SINGLETON);
+public class ServerModule extends ServletModule {
+    protected void configureServlets() {
+        bind(TableAdministrationResource.class).asEagerSingleton();
+        bind(TableDataUriResource.class).asEagerSingleton();
+        bind(TableDataFormResource.class).asEagerSingleton();
+        bind(IndexResource.class).asEagerSingleton();
+        bind(CounterServiceResource.class).asEagerSingleton();
+        bind(GraphServiceResource.class).asEagerSingleton();
+        bind(ClearDataResource.class).asEagerSingleton();
 
-                bind(ObjectMapper.class);
-                bind(MessageBodyReader.class).to(JacksonJsonProvider.class);
-                bind(MessageBodyWriter.class).to(JacksonJsonProvider.class);
+        bind(ObjectMapper.class).asEagerSingleton();
+        bind(MessageBodyReader.class).to(JacksonJsonProvider.class)
+                .asEagerSingleton();
+        bind(MessageBodyWriter.class).to(JacksonJsonProvider.class)
+                .asEagerSingleton();
 
-                serve("*").with(GuiceContainer.class, getGzipFilters());
-            }
-        });
+        serve("*").with(GuiceContainer.class, getGzipFilters());
     }
 
     private static Map<String, String> getGzipFilters() {

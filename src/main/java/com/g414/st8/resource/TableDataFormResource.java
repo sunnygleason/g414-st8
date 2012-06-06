@@ -13,10 +13,10 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.g414.st8.inno.DataManager;
+import com.g414.st8.haildb.DataManager;
 import com.google.inject.Inject;
 
-@Path("/f")
+@Path("/1.0/f")
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 @Produces(MediaType.APPLICATION_JSON)
 public class TableDataFormResource {
@@ -34,14 +34,14 @@ public class TableDataFormResource {
                 ResourceHelper.flattenMap(inForm)));
     }
 
-    @PUT
+    @POST
     @Path("{tablename}")
     public void insertFormData(@PathParam("tablename") String tableName,
             MultivaluedMap<String, String> inForm) throws Exception {
         manager.insertData(tableName, ResourceHelper.flattenMap(inForm));
     }
 
-    @POST
+    @PUT
     @Path("{tablename}")
     public void updateFormData(@PathParam("tablename") String tableName,
             MultivaluedMap<String, String> inForm) throws Exception {

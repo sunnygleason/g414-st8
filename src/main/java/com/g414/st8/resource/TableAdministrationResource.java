@@ -8,7 +8,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,11 +16,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.g414.st8.inno.TableManager;
+import com.g414.st8.haildb.TableManager;
 import com.g414.st8.model.TableDefinition;
 import com.google.inject.Inject;
 
-@Path("/t")
+@Path("/1.0/t")
 public class TableAdministrationResource {
     @Inject
     private TableManager manager;
@@ -46,8 +45,9 @@ public class TableAdministrationResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{tablename}")
-    public TableDefinition getTable(@PathParam("tablename") String name) {
-        TableDefinition result = manager.getTable(name, true);
+    public TableDefinition getTable(@PathParam("tablename") String name)
+            throws Exception {
+        TableDefinition result = manager.getTable(name, false);
 
         if (result == null) {
             throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
@@ -56,7 +56,7 @@ public class TableAdministrationResource {
         return result;
     }
 
-    @PUT
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{tablename}")
@@ -72,13 +72,15 @@ public class TableAdministrationResource {
 
     @POST
     @Path("{tablename}/truncate")
-    public void truncateTable(@PathParam("tablename") String name) {
+    public void truncateTable(@PathParam("tablename") String name)
+            throws Exception {
         manager.truncateTable(name);
     }
 
     @DELETE
     @Path("{tablename}")
-    public void deleteTable(@PathParam("tablename") String name) {
+    public void deleteTable(@PathParam("tablename") String name)
+            throws Exception {
         manager.deleteTable(name);
     }
 }

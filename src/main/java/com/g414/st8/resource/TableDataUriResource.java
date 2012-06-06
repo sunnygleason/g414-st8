@@ -13,10 +13,10 @@ import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.g414.st8.inno.DataManager;
+import com.g414.st8.haildb.DataManager;
 import com.google.inject.Inject;
 
-@Path("/d")
+@Path("/1.0/d")
 @Produces(MediaType.APPLICATION_JSON)
 public class TableDataUriResource {
     @Inject
@@ -33,7 +33,7 @@ public class TableDataUriResource {
                 ResourceHelper.convertUriToMap(uri.getPath())));
     }
 
-    @PUT
+    @POST
     @Path("{tablename}")
     public void insertData(@PathParam("tablename") String tableName,
             @Context UriInfo uri) throws Exception {
@@ -41,7 +41,7 @@ public class TableDataUriResource {
                 .getPath()));
     }
 
-    @POST
+    @PUT
     @Path("{tablename}")
     public void updateData(@PathParam("tablename") String tableName,
             @Context UriInfo uri) throws Exception {
